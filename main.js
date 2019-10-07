@@ -13,7 +13,7 @@ const TOPK = 10;
 
 const predictionThreshold = 0.98
 
-var words = ["alexa", "hello", "other"]
+var words = ["hello", "other"]
 // var words = ["alexa", "hello", "what is", "the weather", "the time",
 //"add","eggs","to the list","five","feet","in meters","tell me","a joke", "bye", "other"]
 
@@ -21,26 +21,26 @@ var words = ["alexa", "hello", "other"]
 // words from above array which act as terminal words in a sentence
 var endWords = ["hello"]
 
-class LaunchModal {
-  constructor(){
-    this.modalWindow = document.getElementById('launchModal')
-
-    this.closeBtn = document.getElementById('close-modal')
-
-    this.closeBtn.addEventListener('click', (e) => {
-      this.modalWindow.style.display = "none"
-    })
-
-    window.addEventListener('click', (e) => {
-      if(e.target == this.modalWindow){
-        this.modalWindow.style.display = "none"
-      }
-    })
-
-    this.modalWindow.style.display = "block"
-    this.modalWindow.style.zIndex = 500
-  }
-}
+// class LaunchModal {
+//   constructor(){
+//     this.modalWindow = document.getElementById('launchModal')
+//
+//     this.closeBtn = document.getElementById('close-modal')
+//
+//     this.closeBtn.addEventListener('click', (e) => {
+//       this.modalWindow.style.display = "none"
+//     })
+//
+//     window.addEventListener('click', (e) => {
+//       if(e.target == this.modalWindow){
+//         this.modalWindow.style.display = "none"
+//       }
+//     })
+//
+//     this.modalWindow.style.display = "block"
+//     this.modalWindow.style.zIndex = 500
+//   }
+// }
 
 
 class Main {
@@ -113,7 +113,7 @@ class Main {
     })
 
     // show modal window
-    let modal = new LaunchModal()
+    // let modal = new LaunchModal()
 
     this.updateExampleCount()
 
@@ -161,14 +161,14 @@ class Main {
         // check if atleast one terminal word has been trained
         if(!this.areTerminalWordsTrained(exampleCount)){
           alert(
-            `Add examples for atleast one terminal word.\n\nA terminal word is a word that appears at the end of a query and is necessary to trigger transcribing. e.g What is *the weather*\n\nYour terminal words are: ${endWords}`
+            `Add examples for at least one terminal word.\n\nA terminal word is a word that appears at the end of a query and is necessary to trigger transcribing. e.g What is *the weather*\n\nYour terminal words are: ${endWords}`
             )
           return
         }
 
         this.trainingListDiv.style.display = "none"
         this.textLine.classList.remove("intro-steps")
-        this.textLine.innerText = "Sign your query"
+        this.textLine.innerText = ""
         this.startPredicting()
       } else {
         alert(
@@ -511,17 +511,17 @@ class TextToSpeech{
       }, this.waitTimeForQuery)
     } 
 
-    if(word != 'alexa' && this.currentPredictedWords.length == 0){
-      console.log("first word should be alexa")
-      console.log(word)
-      return
-    }
-
-    // if(endWords.includes(word) && this.currentPredictedWords.length == 1 && (word != "hello" && word != "bye")){
-    //   console.log("end word detected early")
+    // if(word != 'alexa' && this.currentPredictedWords.length == 0){
+    //   console.log("first word should be alexa")
     //   console.log(word)
-    //   return;
+    //   return
     // }
+
+    if(endWords.includes(word) && this.currentPredictedWords.length == 1 && (word != "hello" && word != "bye")){
+      console.log("end word detected early")
+      console.log(word)
+      return;
+    }
 
     if(this.currentPredictedWords.includes(word)){
       // prevent word from being detected repeatedly in phrase
